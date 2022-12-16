@@ -1,12 +1,20 @@
 # HST_LAB5
-Генeрация матриц с однозначными цифрами
-Загрузка сгенерированных данных в файл (input)
-Запись данных в буфер с файла и отправка на девайса
-Формирование времени выполнения и размера обработанных данных 
+Генeрация матриц с однозначными цифрами  
+
+Загрузка сгенерированных данных в файл (input)  
+
+Запись данных в буфер с файла и отправка на девайса  
+
+Формирование времени выполнения и размера обработанных данных   
+
 Приницип работы
-**cudaMalloc - выделение памяти в gpu
-**cudaMemcpyAsync - копируем данные из программы в область gpu
-Функция (расширяющая MPI, то есть вызывается в MPI)
+---------------
+**cudaMalloc - выделение памяти в gpu  
+
+**cudaMemcpyAsync - копируем данные из программы в область gpu  
+
+# Функция (расширяющая MPI, то есть вызывается в MPI)
+```
 extern "C"  void multiplyMatrix(int* matrix, int* res_matrix, int size){
     int* cuda_matrix;
     gpuErrchk( cudaMalloc((void**)&cuda_matrix, size * size * sizeof(int)) );
@@ -20,7 +28,9 @@ extern "C"  void multiplyMatrix(int* matrix, int* res_matrix, int size){
     gpuErrchk( cudaFree(cuda_matrix) );
     gpuErrchk( cudaFree(cuda_res_matrix) );
 }
-Вычисляющий Kernel 
+```
+# Вычисляющий Kernel 
+```
 __global__ void kernel(int* matrix, int* res_matrix, int size){
     int row = blockDim.x * blockIdx.x + threadIdx.x;
     int column = blockDim.y * blockIdx.y + threadIdx.y;
@@ -31,3 +41,4 @@ __global__ void kernel(int* matrix, int* res_matrix, int size){
         res_matrix[row * size + column] = sum;
     }
 }
+```
